@@ -12,7 +12,7 @@ export function IntroText() {
         }
       </p>
       <p>
-        A valid skill would be "12 - - 3 V" or "8 1 2 V"{" "}
+        A valid skill would be &quot;12 - - 3 V&quot; or &quot;8 1 2 V&quot;{" "}
         {"(Piked triff rudy and Piked full in half out"}
       </p>
     </>
