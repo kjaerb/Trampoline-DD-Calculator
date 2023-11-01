@@ -1,10 +1,8 @@
 import { z } from "zod";
 
-export const ddSchema = z.object({
-  dd: z
-    .string()
-    .regex(/^(?:[\d|-]+\s+)*[OoVvIi]$/, { message: "Skill not recognized" }),
-});
+export const ddSchema = z
+  .string()
+  .regex(/^(?:[\d|-]+\s+)*[OoVvIi]$/, { message: "Skill not recognized" });
 
 export type DD = z.infer<typeof ddSchema>;
 
