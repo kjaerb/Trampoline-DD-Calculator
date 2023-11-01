@@ -1,20 +1,14 @@
 export function IntroText() {
   return (
-    <>
-      <p>Welcome to the trampoline dd calculator</p>
+    <div className="text-center">
       <p>
-        Get started by filling out the inputs with a skill. The skill notation
-        is as following:
+        Please choose a gender and year for Code of Points in the select fields
       </p>
+      <p>Get started by typing in the skills in the input fields.</p>
       <p>
-        {
-          "<number of rotations> <number of twists seperated by space> <position>"
-        }
+        At the end of each input, will be the difficulity and an explanation for
+        the difficulity
       </p>
-      <p>
-        A valid skill would be &quot;12 - - 3 V&quot; or &quot;8 1 2 V&quot;{" "}
-        {"(Piked triff rudy and Piked full in half out"}
-      </p>
-    </>
+    </div>
   );
 }

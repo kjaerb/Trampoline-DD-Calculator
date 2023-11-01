@@ -17,7 +17,8 @@ export function SelectCOP() {
   const { cop, setCOP } = useConfigStore();
 
   return (
-    <>
+    <div className="flex flex-col w-full items-start space-y-2">
+      <Label>Code of Points</Label>
       <Select value={cop} onValueChange={(e: COPYears) => setCOP(e)}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="COP" />
@@ -33,6 +34,6 @@ export function SelectCOP() {
           </SelectGroup>
         </SelectContent>
       </Select>
-    </>
+    </div>
   );
 }

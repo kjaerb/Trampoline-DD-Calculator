@@ -45,8 +45,6 @@ export function CombinedDD({ ...props }: CombinedDDProps) {
         elements: dd.filter(Boolean) as SkillElement[],
       })
     );
-
-    console.log(exerciseBonus);
   }, [dd, cop, gender]);
 
   return (
