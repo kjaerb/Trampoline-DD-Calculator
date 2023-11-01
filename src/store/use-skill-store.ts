@@ -1,29 +1,26 @@
+import { SkillElement } from "@/components/config/cop";
 import { create } from "zustand";
 
 // Define the state and actions for the store
 interface SkillStore {
-  dd: number[];
-  setDDValue: (index: number, value: number) => void;
-  setDDToZero: (index: number) => void;
+  dd: (SkillElement | undefined)[];
+  setDDValueAtIndex: (index: number, value: SkillElement | undefined) => void;
+  setDDAtIndexToNull: (index: number) => void;
 }
 
 const useSkillStore = create<SkillStore>((set) => ({
-  dd: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Initialize with 10 zeros, change this as needed
-
-  // Function to set the value at a specific position in the array
-  setDDValue: (index, value) =>
+  dd: [],
+  setDDValueAtIndex: (index, value) =>
     set((state) => {
-      const newDD = [...state.dd];
-      newDD[index] = value;
-      return { dd: newDD };
+      const dd = [...state.dd];
+      dd[index] = value;
+      return { dd };
     }),
-
-  // Function to set the value at a specific position to 0
-  setDDToZero: (index) =>
+  setDDAtIndexToNull: (index) =>
     set((state) => {
-      const newDD = [...state.dd];
-      newDD[index] = 0;
-      return { dd: newDD };
+      const dd = [...state.dd];
+      dd[index] = undefined;
+      return { dd };
     }),
 }));
 

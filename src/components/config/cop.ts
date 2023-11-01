@@ -511,4 +511,4 @@ export const codeOfPoints: Record<COPYears, COP> = {
       },
     ],
   },
-} as const;
+};

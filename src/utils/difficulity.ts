@@ -3,6 +3,7 @@ import { Gender } from "@/schema/config-schema";
 import {
   Condition,
   ConditionReturnType,
+  ExerciseBonus,
   SkillElement,
 } from "@/components/config/cop";
 
@@ -97,4 +98,20 @@ export function getDifficulity({
     conditions: bonuses,
     difficulity: parseFloat(difficulity.toFixed(1)),
   };
+}
+
+interface FullDifficulityArgs {
+  elements: SkillElement[];
+  condition: ExerciseBonus[];
+  gender: Gender;
+}
+
+export function getFullExerciseBonus({
+  elements,
+  condition,
+  gender,
+}: FullDifficulityArgs) {
+  return condition
+    .map((bonus) => bonus({ elements, gender }))
+    .filter((bonus) => bonus.difficulity !== 0);
 }

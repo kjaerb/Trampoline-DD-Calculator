@@ -17,7 +17,7 @@ export default function Home() {
         </div>
       </div>
       <div className="space-y-4 mt-4">
-        <Card className=" mx-auto p-4 space-y-4">
+        <Card className="mx-auto p-4 space-y-4 w-full md:w-2/3">
           <div className="grid grid-cols-1 space-y-4 w-content">
             {Array.from({ length: 10 }, (_, i) => (
               <DDInput skillNum={i} key={i} />
