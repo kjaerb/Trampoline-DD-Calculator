@@ -58,7 +58,7 @@ export function CombinedDD({ ...props }: CombinedDDProps) {
           </div>
         ))}
       </div>
-      <Label className="font-bold">DD: {combinedDD}</Label>
+      <Label className="font-bold">DD: {combinedDD.toFixed(1)}</Label>
     </div>
   );
 }
