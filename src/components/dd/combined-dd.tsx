@@ -23,28 +23,33 @@ export function CombinedDD({ ...props }: CombinedDDProps) {
   useEffect(() => {
     const currentCOP = codeOfPoints[cop];
 
-    setCombinedDD(
-      dd
-        .filter(Boolean)
-        .map((d) => {
-          return getDifficulity({
-            conditions: currentCOP.conditions,
-            bonus: currentCOP.bonuses,
-            element: d as SkillElement,
-            gender,
-          });
-        })
-        .filter((d) => d.difficulity !== 0)
-        .reduce((acc, curr) => acc + curr.difficulity, 0)
+    const fullExerciseBonus = getFullExerciseBonus({
+      condition: currentCOP.exerciseBonus,
+      gender,
+      elements: dd.filter(Boolean) as SkillElement[],
+    });
+
+    setExerciseBonus(fullExerciseBonus);
+
+    const exerciseDDBonus = fullExerciseBonus.reduce(
+      (acc, curr) => acc + curr.difficulity,
+      0
     );
 
-    setExerciseBonus(
-      getFullExerciseBonus({
-        condition: currentCOP.exerciseBonus,
-        gender,
-        elements: dd.filter(Boolean) as SkillElement[],
+    const currentDD = dd
+      .filter(Boolean)
+      .map((d) => {
+        return getDifficulity({
+          conditions: currentCOP.conditions,
+          bonus: currentCOP.bonuses,
+          element: d as SkillElement,
+          gender,
+        });
       })
-    );
+      .filter((d) => d.difficulity !== 0)
+      .reduce((acc, curr) => acc + curr.difficulity, 0);
+
+    setCombinedDD(currentDD + exerciseDDBonus);
   }, [dd, cop, gender]);
 
   return (
@@ -52,9 +57,9 @@ export function CombinedDD({ ...props }: CombinedDDProps) {
       <div className="space-y-2">
         {exerciseBonus.map((bonus, i) => (
           <div className="flex justify-evenly space-x-2" key={i}>
-            <Label className="flex-auto">{bonus.label}</Label>
-            <Separator orientation="vertical" className="h-[32px]" />
-            <Label className="flex-1">{bonus.difficulity}</Label>
+            <Label className="">{bonus.label}</Label>
+            <Separator orientation="vertical" className="h-auto" />
+            <Label className="no-wrap">Bonus: {bonus.difficulity}</Label>
           </div>
         ))}
       </div>

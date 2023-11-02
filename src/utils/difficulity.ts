@@ -84,10 +84,7 @@ export function getDifficulity({
     element,
   });
 
-  const bonuses = conditionsBonuses
-    .map((condition, index) => [condition, bonusBonuses[index]])
-    .flat()
-    .filter(Boolean);
+  const bonuses = [...conditionsBonuses, ...bonusBonuses].filter(Boolean);
 
   const difficulity = bonuses.reduce(
     (acc, condition) => acc + condition.difficulity,
@@ -112,6 +109,7 @@ export function getFullExerciseBonus({
   gender,
 }: FullDifficulityArgs) {
   return condition
+    .filter(Boolean)
     .map((bonus) => bonus({ elements, gender }))
     .filter((bonus) => bonus.difficulity !== 0);
 }

@@ -15,7 +15,7 @@ export default function Home() {
           <DialogTrigger className="px-3 py-2 bg-black text-white shadow-md rounded-md">
             Notation
           </DialogTrigger>
-          <DialogContent className="p-8 text-center md:text-left">
+          <DialogContent className="p-8">
             <p>
               The notation follows the same notation as described in the Code of
               Points
