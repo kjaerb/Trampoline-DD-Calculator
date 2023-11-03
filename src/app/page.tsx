@@ -1,11 +1,10 @@
 import { CombinedDD } from "@/components/dd/combined-dd";
-import { DDInput } from "@/components/dd/dd-input";
 import { SelectGender } from "@/components/config/gender-selector";
 import { IntroText } from "@/components/text/intro-text";
-import { Card } from "@/components/ui/card";
 import { SelectCOP } from "@/components/config/cop-selector";
 import { Header } from "./_layout/header";
 import { Footer } from "./_layout/footer";
+import { DDTable } from "@/components/dd/dd-table";
 
 export default function Home() {
   return (
@@ -19,14 +18,8 @@ export default function Home() {
         </div>
       </div>
       <div className="space-y-4 mt-4">
-        <Card className="mx-auto p-4 space-y-4">
-          <div className="grid grid-cols-1 space-y-4 w-content">
-            {Array.from({ length: 10 }, (_, i) => (
-              <DDInput skillNum={i} key={i} />
-            ))}
-          </div>
-          <CombinedDD className="mt-4" />
-        </Card>
+        <DDTable />
+        <CombinedDD className="px-4" />
       </div>
       <Footer />
     </main>

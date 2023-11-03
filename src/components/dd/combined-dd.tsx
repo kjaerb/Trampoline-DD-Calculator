@@ -59,7 +59,7 @@ export function CombinedDD({ ...props }: CombinedDDProps) {
           <div className="flex justify-evenly space-x-2" key={i}>
             <Label className="">{bonus.label}</Label>
             <Separator orientation="vertical" className="h-auto" />
-            <Label className="no-wrap">Bonus: {bonus.difficulity}</Label>
+            <Label className="no-wrap pl-6">Bonus: {bonus.difficulity}</Label>
           </div>
         ))}
       </div>
