@@ -60,6 +60,7 @@ export function DDInput({ skillNum }: DDInputProps) {
     <div className="grid grid-cols-2 space-x-4">
       <div>
         <Input
+          placeholder="Enter skill"
           className={cn(
             error && "border-red-500 focus-visible:outline-red-500"
           )}
