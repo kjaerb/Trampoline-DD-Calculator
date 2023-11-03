@@ -6,8 +6,8 @@ export function IntroText() {
       </p>
       <p>Get started by typing in the skills in the input fields.</p>
       <p>
-        At the end of each input, will be the difficulity and an explanation for
-        the difficulity
+        At the end of each input, will be the difficulty and an explanation for
+        the difficulty
       </p>
     </div>
   );
