@@ -378,7 +378,7 @@ export const codeOfPoints: Record<COPYears, COP> = {
 
         const numTwists = getNumTwists(twists);
 
-        if (gender === "Male") {
+        if (gender === "Men") {
           const subtraction = 1080 / 180;
           const dd = (numTwists - subtraction) * 0.1;
 
@@ -390,7 +390,7 @@ export const codeOfPoints: Record<COPYears, COP> = {
               "Men - Element with more than 1080 degrees of twist, each additional 180 degrees of twist is 0.1pts",
             difficulity: dd > 0 ? dd : 0,
           };
-        } else if (gender === "Female") {
+        } else if (gender === "Women") {
           const subtraction = 720 / 180;
           const dd = (numTwists - subtraction) * 0.1;
 
@@ -427,7 +427,7 @@ export const codeOfPoints: Record<COPYears, COP> = {
           };
         }
 
-        if (gender === "Male") {
+        if (gender === "Men") {
           const subtraction = 540 / 180;
 
           const dd = (numTwists - subtraction) * 0.2;
@@ -440,7 +440,7 @@ export const codeOfPoints: Record<COPYears, COP> = {
               "Men - Element with more than 540 degrees of twist, each additional 180 degrees of twist is 0.2pts",
             difficulity: dd > 0 ? dd : 0,
           };
-        } else if (gender === "Female") {
+        } else if (gender === "Women") {
           const subtraction = 180 / 180;
 
           const dd = (numTwists - subtraction) * 0.2;
@@ -475,7 +475,7 @@ export const codeOfPoints: Record<COPYears, COP> = {
           (rotation) => getFullRotations(rotation) >= 3
         );
 
-        if (gender === "Male") {
+        if (gender === "Men") {
           const subtraction = 5;
 
           const dd = (trippleOrMoreRotations.length - subtraction) * 0.3;
@@ -488,7 +488,7 @@ export const codeOfPoints: Record<COPYears, COP> = {
               "Men - Exercise with more than 5 elements of 1080 degrees of somersaults rotation, each additional element of 1080 degrees of somersault rotation or more is 0.3pts",
             difficulity: dd > 0 ? dd : 0,
           };
-        } else if (gender === "Female") {
+        } else if (gender === "Women") {
           const subtraction = 2;
 
           const dd = (trippleOrMoreRotations.length - subtraction) * 0.3;
