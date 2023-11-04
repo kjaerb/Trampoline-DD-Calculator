@@ -1,8 +1,10 @@
+import Image from "next/image";
+
 export function Footer() {
   return (
     <footer className="py-4 mt-4 border-t">
       <div className="flex justify-between items-center text-gray-500 text-xs flex-col sm:flex-row">
-        <p>&copy; {new Date().getFullYear()} - Benjamin Kjær</p>
+        <p>&copy;{new Date().getFullYear()} - Benjamin Kjær</p>
         <div className="flex flex-col sm:flex-row justify-center items-center">
           <p className="flex items-center mt-2 sm:mt-0">
             Made with{" "}
@@ -29,10 +31,12 @@ export function Footer() {
             target="_blank"
             className="ml-1 mt-2 sm:mt-0"
           >
-            <img
+            <Image
+              width={108}
+              height={30}
               src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png"
               alt="Buy Me A Coffee"
-              className="h-[30px] w-[108px] mx-auto"
+              className=" mx-auto"
             />
           </a>
         </div>

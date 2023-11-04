@@ -267,12 +267,15 @@ export const codeOfPoints: Record<COPYears, COP> = {
         };
       },
       ({ element: { quarterRotations } }) => {
+        let isNoRotations =
+          quarterRotations === 0 || Number.isNaN(quarterRotations);
+
         return {
           id: "17.1.2",
           labelPoints: 0.1,
           label:
             "Elements without twist or somersault rotation (tuck jump, pike jump, straddle jump, seat drop, hands & knees drop) will have a difficulty value of 0.1 pts.",
-          difficulity: quarterRotations === 0 ? 0.1 : 0,
+          difficulity: isNoRotations ? 0.1 : 0,
         };
       },
       ({}) => {

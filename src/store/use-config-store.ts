@@ -10,7 +10,7 @@ interface ConfigStore {
 }
 
 const useConfigStore = create<ConfigStore>((set) => ({
-  gender: "Male",
+  gender: "Men",
   setGender: (gender: Gender) => set({ gender }),
   cop: "2022-2024",
   setCOP: (cop: COPYears) => set({ cop }),

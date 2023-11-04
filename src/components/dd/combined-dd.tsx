@@ -53,7 +53,7 @@ export function CombinedDD({ ...props }: CombinedDDProps) {
   }, [dd, cop, gender]);
 
   return (
-    <div {...props}>
+    <div {...props} className="border-t py-4">
       <div className="space-y-2">
         {exerciseBonus.map((bonus, i) => (
           <div className="flex justify-evenly space-x-2" key={i}>

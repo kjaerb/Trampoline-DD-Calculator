@@ -61,7 +61,9 @@ export function DDInputTable({ skillNum }: DDInputProps) {
     <>
       <TableCell>
         <Input
-          placeholder="Enter skill"
+          placeholder={`Enter skill${
+            skillNum === 0 ? ". Example: 12 - - 3 V" : ""
+          }`}
           className={cn(
             error && "border-red-500 focus-visible:outline-red-500"
           )}
