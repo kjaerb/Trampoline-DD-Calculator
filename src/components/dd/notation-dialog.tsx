@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 export function NotationDialog() {
   return (
     <Dialog>
-      <DialogTrigger className="px-3 py-2 bg-black text-white shadow-md rounded-md">
+      <DialogTrigger className="px-3 py-2 shadow-md rounded-md bg-black text-white dark:bg-gray-800">
         Notation
       </DialogTrigger>
       <DialogContent className="p-8">
