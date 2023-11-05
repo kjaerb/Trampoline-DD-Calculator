@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 
+import { Analytics } from "@vercel/analytics/react";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -34,6 +36,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster richColors />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
