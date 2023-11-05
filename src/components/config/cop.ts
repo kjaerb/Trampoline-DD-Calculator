@@ -19,7 +19,7 @@ export type ConditionReturnType = {
 
 export type SkillElement = {
   quarterRotations: number;
-  twists: number[];
+  twists: Record<number, number>;
   position: Position;
 };
 

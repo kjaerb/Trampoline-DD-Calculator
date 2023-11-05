@@ -14,11 +14,11 @@ export function transformDDString(ddString: DD): SkillElement {
 
   const quarterRotations = parseInt(identifiers[0]);
 
-  const twists = identifiers
-    .slice(1)
-    .map((twist) => twist.replace(/[^0-9.]/, ""))
-    .map((twist) => parseInt(twist))
-    .filter((twist) => !isNaN(twist));
+  const twists: Record<number, number> = {};
+
+  identifiers.slice(1).forEach((twist, i) => {
+    twists[i] = parseInt(twist.replace(/[^0-9.]/, ""));
+  });
 
   const position = positionSchema.parse(seperatedDD[seperatedDD.length - 1]);
 
@@ -29,6 +29,33 @@ export function transformDDString(ddString: DD): SkillElement {
   };
 }
 
+export function findDuplicateSkill(
+  skills: string[],
+  skill: string
+): { duplicate: boolean; index: number | undefined } {
+  const hasElement = skills.includes(skill);
+
+  if (!hasElement) {
+    return {
+      duplicate: hasElement,
+      index: undefined,
+    };
+  } else {
+    var indices: number[] = [];
+
+    skills.filter(function (arr, index) {
+      if (arr == skill) {
+        indices.push(index);
+      }
+    });
+
+    return {
+      duplicate: hasElement,
+      index: indices[0],
+    };
+  }
+}
+
 export function getIsBackwards(twists: number): boolean {
   return twists % 2 === 0;
 }
@@ -37,8 +64,10 @@ export function getFullRotations(rotations: number): number {
   return Math.floor(rotations / 4);
 }
 
-export function getNumTwists(twists: number[]): number {
-  return twists.reduce((acc, twists) => acc + twists, 0);
+export function getNumTwists(twists: Record<number, number>): number {
+  return Object.entries(twists)
+    .filter((twist) => !Number.isNaN(twist[1]))
+    .reduce((acc, twists) => acc + twists[1], 0);
 }
 
 interface ConditionBonusArgs {

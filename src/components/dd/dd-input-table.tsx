@@ -5,12 +5,17 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { DD, ddSchema } from "@/schema/dd-schema";
 import useConfigStore from "@/store/use-config-store";
-import { getDifficulity, transformDDString } from "@/utils/difficulity";
+import {
+  findDuplicateSkill,
+  getDifficulity,
+  transformDDString,
+} from "@/utils/difficulity";
 import { useEffect, useState } from "react";
 import { ConditionReturnType, codeOfPoints } from "@/components/config/cop";
 import useSkillStore from "@/store/use-skill-store";
 import { Explanation } from "./explanation";
 import { TableCell } from "@/components/ui/table";
+import { toast } from "sonner";
 
 interface DDInputProps {
   skillNum: number;
@@ -22,34 +27,63 @@ export function DDInputTable({ skillNum }: DDInputProps) {
   const [error, setError] = useState<string>("");
   const [conditions, setConditions] = useState<ConditionReturnType[]>([]);
   const { gender, cop } = useConfigStore();
-  const { setDDValueAtIndex, setDDAtIndexToNull } = useSkillStore();
+  const {
+    setDDValueAtIndex,
+    setDDAtIndexToNull,
+    setSkillAtIndex,
+    setSkillAtIndexToEmpty,
+    skills,
+  } = useSkillStore();
 
   useEffect(() => {
-    if (ddInput !== "") {
-      const parsedDD = ddSchema.safeParse(ddInput);
-      if (parsedDD.success) {
-        const element = transformDDString(parsedDD.data);
+    try {
+      if (ddInput !== "") {
+        const parsedDD = ddSchema.safeParse(ddInput);
+        if (parsedDD.success) {
+          const element = transformDDString(parsedDD.data);
+          const elementString = JSON.stringify(element);
+          setSkillAtIndex(skillNum, elementString);
 
-        const currentCOP = codeOfPoints[cop];
+          const duplicates = findDuplicateSkill(skills, elementString);
 
-        const { conditions, difficulity } = getDifficulity({
-          conditions: currentCOP.conditions,
-          bonus: currentCOP.bonuses,
-          element,
-          gender,
-        });
+          if (duplicates.duplicate) {
+            setError(
+              `Routine already contains element at ${duplicates.index! + 1}`
+            );
+            setDD(0);
+            setConditions([]);
+            setDDAtIndexToNull(skillNum);
+          } else {
+            const currentCOP = codeOfPoints[cop];
 
-        setError("");
-        setDD(difficulity);
-        setConditions(conditions);
-        setDDValueAtIndex(skillNum, element);
+            const { conditions, difficulity } = getDifficulity({
+              conditions: currentCOP.conditions,
+              bonus: currentCOP.bonuses,
+              element,
+              gender,
+            });
+
+            setError("");
+            setDD(difficulity);
+            setConditions(conditions);
+            setDDValueAtIndex(skillNum, element);
+          }
+        } else {
+          setError(parsedDD.error.errors[0].message);
+          setDD(0);
+          setConditions([]);
+          setDDAtIndexToNull(skillNum);
+          setSkillAtIndexToEmpty(skillNum);
+        }
       } else {
-        setError(parsedDD.error.errors[0].message);
         setDD(0);
+        setError("");
         setConditions([]);
         setDDAtIndexToNull(skillNum);
+        setSkillAtIndexToEmpty(skillNum);
       }
-    } else {
+    } catch (ex) {
+      toast.error("Something went wrong");
       setDD(0);
       setError("");
       setConditions([]);
@@ -59,7 +93,8 @@ export function DDInputTable({ skillNum }: DDInputProps) {
 
   return (
     <>
-      <TableCell>
+      <TableCell className="pr-0">{skillNum + 1}</TableCell>
+      <TableCell className="pl-2 pr-0">
         <Input
           placeholder={`Enter skill${
             skillNum === 0 ? ". Example: 12 - - 3 V" : ""

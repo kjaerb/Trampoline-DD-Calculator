@@ -12,7 +12,8 @@ export function DDTable() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Skill</TableHead>
+          <TableHead></TableHead>
+          <TableHead className="pl-2">Skill</TableHead>
           <TableHead>Difficulty</TableHead>
           <TableHead>Info</TableHead>
         </TableRow>
