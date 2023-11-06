@@ -1,4 +1,4 @@
-import { SkillElement } from "@/components/config/cop";
+import { SkillElement } from "@/utils/cop";
 import { create } from "zustand";
 
 // Define the state and actions for the store

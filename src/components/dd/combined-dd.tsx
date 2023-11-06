@@ -2,11 +2,7 @@
 
 import useSkillStore from "@/store/use-skill-store";
 import { HTMLAttributes, useEffect, useState } from "react";
-import {
-  ConditionReturnType,
-  SkillElement,
-  codeOfPoints,
-} from "@/components/config/cop";
+import { ConditionReturnType, SkillElement, codeOfPoints } from "@/utils/cop";
 import useConfigStore from "@/store/use-config-store";
 import { getDifficulity, getFullExerciseBonus } from "@/utils/difficulity";
 import { Label } from "@/components/ui/label";

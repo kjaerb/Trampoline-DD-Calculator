@@ -1,4 +1,4 @@
-import { COPYears } from "@/components/config/cop";
+import { COPYears } from "@/utils/cop";
 import { Gender } from "@/schema/config-schema";
 import { create } from "zustand";
 

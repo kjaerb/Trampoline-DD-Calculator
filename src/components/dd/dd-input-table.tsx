@@ -11,7 +11,7 @@ import {
   transformDDString,
 } from "@/utils/difficulity";
 import { useEffect, useState } from "react";
-import { ConditionReturnType, codeOfPoints } from "@/components/config/cop";
+import { ConditionReturnType, codeOfPoints } from "@/utils/cop";
 import useSkillStore from "@/store/use-skill-store";
 import { Explanation } from "./explanation";
 import { TableCell } from "@/components/ui/table";

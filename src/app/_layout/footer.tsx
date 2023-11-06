@@ -4,10 +4,10 @@ import Image from "next/image";
 export function Footer() {
   return (
     <footer className="py-4 mt-4 border-t">
-      <div className="flex justify-between items-center text-gray-500 text-xs flex-col sm:flex-row">
-        <div className="flex flex-col sm:flex-row justify-center items-center">
+      <div className="flex justify-between items-start sm:items-center text-gray-500 text-xs flex-col sm:flex-row space-y-4 sm:space-y-0">
+        <div className="flex flex-col sm:flex-row justify-center items-start sm:items-center space-y-4 sm:space-y-0">
           <ThemeToggle />
-          <p className="ml-2 mt-2 sm:mt-0">
+          <p className="ml-0 sm:ml-2 mt-2 sm:mt-0">
             &copy;{new Date().getFullYear()} - Benjamin Kjær
           </p>
         </div>
@@ -17,14 +17,14 @@ export function Footer() {
           <a
             href="https://www.buymeacoffee.com/benjaminkjaer"
             target="_blank"
-            className="ml-1 mt-2 sm:mt-0"
+            className="ml-0 sm:ml-1 mt-2 sm:mt-0"
           >
             <Image
               width={108}
               height={30}
               src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png"
               alt="Buy Me A Coffee"
-              className=" mx-auto"
+              className="mx-0 sm:mx-auto"
             />
           </a>
         </div>

@@ -4,8 +4,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { ConditionReturnType } from "@/components/config/cop";
 import { Label } from "@/components/ui/label";
+import { ConditionReturnType } from "@/utils/cop";
 
 interface ExplanationProps {
   conditions: ConditionReturnType[];

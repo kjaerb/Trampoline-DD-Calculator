@@ -9,17 +9,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useConfigStore from "@/store/use-config-store";
 import { Label } from "@/components/ui/label";
 import { COPYears, COPs } from "@/utils/cop";
+import { Dispatch, SetStateAction } from "react";
 
-export function SelectCOP() {
-  const { cop, setCOP } = useConfigStore();
+interface SelectCOPProps {
+  id: string;
+}
 
+export function SelectCOP({ id }: SelectCOPProps) {
   return (
     <div className="flex flex-col w-full items-start space-y-2">
       <Label>Code of Points</Label>
-      <Select value={cop} onValueChange={(e: COPYears) => setCOP(e)}>
+      {/* <Select value={cop} onValueChange={(e: COPYears) => setCOP(e)}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="COP" />
         </SelectTrigger>
@@ -33,7 +35,7 @@ export function SelectCOP() {
             ))}
           </SelectGroup>
         </SelectContent>
-      </Select>
+      </Select> */}
     </div>
   );
 }
