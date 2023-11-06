@@ -16,6 +16,7 @@ import useSkillStore from "@/store/use-skill-store";
 import { Explanation } from "./explanation";
 import { TableCell } from "@/components/ui/table";
 import { toast } from "sonner";
+import { ZodError } from "zod";
 
 interface DDInputProps {
   skillNum: number;
@@ -38,56 +39,71 @@ export function DDInputTable({ skillNum }: DDInputProps) {
   useEffect(() => {
     try {
       if (ddInput !== "") {
-        const parsedDD = ddSchema.safeParse(ddInput);
-        if (parsedDD.success) {
-          const element = transformDDString(parsedDD.data);
-          const elementString = JSON.stringify(element);
-          setSkillAtIndex(skillNum, elementString);
+        const parsedDD = ddSchema.parse(ddInput);
+        const element = transformDDString(parsedDD);
+        const elementString = JSON.stringify(element);
+        setSkillAtIndex(skillNum, elementString);
 
-          const duplicates = findDuplicateSkill(skills, elementString);
+        // Issue with backpropagation. Can't detect previouss duplicates
+        const duplicates = findDuplicateSkill(
+          skills.slice(0, skillNum),
+          elementString
+        );
 
-          if (duplicates.duplicate) {
-            setError(
-              `Routine already contains element at ${duplicates.index! + 1}`
-            );
-            setDD(0);
-            setConditions([]);
-            setDDAtIndexToNull(skillNum);
-          } else {
-            const currentCOP = codeOfPoints[cop];
+        if (duplicates.duplicate) {
+          setParams({
+            dd: 0,
+            conditions: [],
+            error: `Routine already contains element at ${
+              duplicates.index! + 1
+            }`,
+          });
 
-            const { conditions, difficulity } = getDifficulity({
-              conditions: currentCOP.conditions,
-              bonus: currentCOP.bonuses,
-              element,
-              gender,
-            });
-
-            setError("");
-            setDD(difficulity);
-            setConditions(conditions);
-            setDDValueAtIndex(skillNum, element);
-          }
-        } else {
-          setError(parsedDD.error.errors[0].message);
-          setDD(0);
-          setConditions([]);
           setDDAtIndexToNull(skillNum);
-          setSkillAtIndexToEmpty(skillNum);
+        } else {
+          const currentCOP = codeOfPoints[cop];
+
+          const { conditions, difficulity } = getDifficulity({
+            conditions: currentCOP.conditions,
+            bonus: currentCOP.bonuses,
+            element,
+            gender,
+          });
+          setParams({
+            dd: difficulity,
+            conditions,
+            error: "",
+          });
+
+          setDDValueAtIndex(skillNum, element);
         }
       } else {
-        setDD(0);
-        setError("");
-        setConditions([]);
+        setParams({
+          dd: 0,
+          error: "",
+          conditions: [],
+        });
         setDDAtIndexToNull(skillNum);
         setSkillAtIndexToEmpty(skillNum);
       }
     } catch (ex) {
-      toast.error("Something went wrong");
-      setDD(0);
-      setError("");
-      setConditions([]);
-      setDDAtIndexToNull(skillNum);
+      if (ex instanceof ZodError) {
+        setParams({
+          dd: 0,
+          conditions: [],
+          error: ex.errors[0].message,
+        });
+        setDDAtIndexToNull(skillNum);
+        setSkillAtIndexToEmpty(skillNum);
+      } else {
+        toast.error("Something went wrong");
+        setParams({
+          dd: 0,
+          error: "",
+          conditions: [],
+        });
+        setDDAtIndexToNull(skillNum);
+      }
     }
   }, [ddInput, cop, gender]);
 
@@ -113,4 +129,16 @@ export function DDInputTable({ skillNum }: DDInputProps) {
       </TableCell>
     </>
   );
+
+  function setParams({
+    dd,
+    error,
+    conditions,
+  }: {
+    dd: number;
+    error: string;
+    conditions: ConditionReturnType[];
+  }) {
+    setError(error), setDD(dd), setConditions(conditions);
+  }
 }
