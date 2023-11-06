@@ -1,14 +1,10 @@
 import { Gender } from "@/schema/config-schema";
-import { DD, Position } from "@/schema/dd-schema";
+import { COPYear, Position } from "@/schema/tariff-schema";
 import {
   getFullRotations,
   getIsBackwards,
   getNumTwists,
 } from "@/utils/difficulity";
-
-export const COPs = ["2022-2024", "2025-2028"] as const;
-
-export type COPYears = (typeof COPs)[number];
 
 export type ConditionReturnType = {
   id: string;
@@ -41,7 +37,7 @@ type COP = {
   exerciseBonus: ExerciseBonus[];
 };
 
-export const codeOfPoints: Record<COPYears, COP> = {
+export const codeOfPoints: Record<COPYear, COP> = {
   "2022-2024": {
     conditions: [
       (args) => {

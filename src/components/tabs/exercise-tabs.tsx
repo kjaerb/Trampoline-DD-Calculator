@@ -3,11 +3,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { DDTable } from "@/components/dd/dd-table";
 import { nanoid } from "nanoid";
 import { cn } from "@/lib/utils";
-import { SelectGender } from "../selects/select-gender";
-import { SelectCOP } from "../selects/select-cop";
+import { SelectGender } from "@/components/selects/select-gender";
+import { SelectCOP } from "@/components/selects/select-cop";
+import { TariffTable } from "@/components/tariff/tariff-table";
 
 type Exercise = {
   id: string;
@@ -20,7 +20,7 @@ export function ExerciseTabs() {
     {
       id: nanoid(),
       index: 1,
-      exercise: [""],
+      exercise: [],
     },
   ]);
   const [numTabs, setNumTabs] = useState<number>(1);
@@ -67,7 +67,7 @@ export function ExerciseTabs() {
             <SelectGender id={tab.id} />
             <SelectCOP id={tab.id} />
           </div>
-          <DDTable id={tab.id} />
+          <TariffTable id={tab.id} />
         </TabsContent>
       ))}
     </Tabs>

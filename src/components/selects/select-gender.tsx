@@ -11,17 +11,24 @@ import {
 } from "@/components/ui/select";
 import { Gender, genders } from "@/schema/config-schema";
 import { Label } from "../ui/label";
-import { Dispatch, SetStateAction } from "react";
+import useConfigStore from "@/store/use-config-store";
 
 interface SelectGenderProps {
   id: string;
 }
 
 export function SelectGender({ id }: SelectGenderProps) {
+  const { gender, setGender } = useConfigStore();
+
+  const currentGender = gender[id];
+
   return (
     <div className="flex flex-col w-full items-start space-y-2">
       <Label>Gender</Label>
-      {/* <Select value={gender} onValueChange={(e: Gender) => setGender(e)}>
+      <Select
+        value={currentGender}
+        onValueChange={(e: Gender) => setGender({ id, value: e })}
+      >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a gender" />
         </SelectTrigger>
@@ -35,7 +42,7 @@ export function SelectGender({ id }: SelectGenderProps) {
             ))}
           </SelectGroup>
         </SelectContent>
-      </Select> */}
+      </Select>
     </div>
   );
 }

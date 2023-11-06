@@ -1,13 +1,14 @@
-import { DD, positionSchema } from "@/schema/dd-schema";
+import { COPYear, Tariff, positionSchema } from "@/schema/tariff-schema";
 import { Gender } from "@/schema/config-schema";
 import {
   Condition,
   ConditionReturnType,
   ExerciseBonus,
   SkillElement,
-} from "@/components/config/cop";
+  codeOfPoints,
+} from "@/utils/cop";
 
-export function transformDDString(ddString: DD): SkillElement {
+export function transformTariffString(ddString: Tariff["skill"]): SkillElement {
   const seperatedDD = ddString.toUpperCase().split(" ");
 
   const identifiers = seperatedDD.slice(0, seperatedDD.length - 1);
@@ -73,44 +74,47 @@ export function getNumTwists(twists: Record<number, number>): number {
 interface ConditionBonusArgs {
   conditions: Condition[];
   gender: Gender;
-  element: SkillElement;
+  skill: SkillElement;
 }
 
 export function getConditionBonuses({
   conditions,
   gender,
-  element,
+  skill,
 }: ConditionBonusArgs) {
   return conditions
-    .map((condition) => condition({ gender, element: element }))
+    .map((condition) => condition({ gender, element: skill }))
     .filter((condition) => condition.difficulity !== 0);
-}
-
-interface DifficulityArgs extends ConditionBonusArgs {
-  bonus: Condition[];
 }
 
 type DifficulityReturnType = {
   conditions: ConditionReturnType[];
-  difficulity: number;
+  difficulty: number;
 };
 
-export function getDifficulity({
-  conditions,
-  bonus,
+type DifficulityArgs = {
+  copYear: COPYear;
+  gender: Gender;
+  skill: SkillElement;
+};
+
+export function getDifficulty({
+  copYear,
   gender,
-  element,
+  skill,
 }: DifficulityArgs): DifficulityReturnType {
+  const currentCOP = codeOfPoints[copYear];
+
   const conditionsBonuses = getConditionBonuses({
-    conditions,
+    conditions: currentCOP.conditions,
     gender,
-    element,
+    skill,
   });
 
   const bonusBonuses = getConditionBonuses({
-    conditions: bonus,
+    conditions: currentCOP.bonuses,
     gender,
-    element,
+    skill,
   });
 
   const bonuses = [...conditionsBonuses, ...bonusBonuses].filter(Boolean);
@@ -122,7 +126,7 @@ export function getDifficulity({
 
   return {
     conditions: bonuses,
-    difficulity: parseFloat(difficulity.toFixed(1)),
+    difficulty: parseFloat(difficulity.toFixed(1)),
   };
 }
 

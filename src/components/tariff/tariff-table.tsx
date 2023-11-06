@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -6,22 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
-import { COPYears, SkillElement } from "@/utils/cop";
-import { SelectGender } from "@/components/selects/select-gender";
-import { SelectCOP } from "@/components/selects/select-cop";
-import { Gender } from "@/schema/config-schema";
 import { CombinedDD } from "./temp/combined-dd";
 import { nanoid } from "nanoid";
+import { TariffInput } from "./temp/tariff-input";
+import useSkillStore from "@/store/use-skill-store";
 
 interface DDTableProps {
   id: string;
 }
 
-export function DDTable({ id }: DDTableProps) {
-  const [cop, setCOP] = useState<COPYears>("2022-2024");
-  const [gender, setGender] = useState<Gender>("Men");
-  const [skills, setSkills] = useState<SkillElement[]>([]);
+export function TariffTable({ id }: DDTableProps) {
+  const { skills } = useSkillStore();
+  const currentSkills = skills[id];
 
   return (
     <div className="mt-4">
@@ -35,23 +33,19 @@ export function DDTable({ id }: DDTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {/* {Array.from({ length: 10 }, (_, i) => (
-            <TableRow key={i}>
-              <DDInputTable skillNum={i} />
-            </TableRow>
-          ))} */}
-
           {Array.from({ length: 10 }, (_, i) => (
             <TableRow key={nanoid()}>
               <TableCell className="pr-0">{i + 1}</TableCell>
-              <TableCell>input</TableCell>
-              <TableCell>dd</TableCell>
+              <TableCell>
+                <TariffInput id={id} index={i} />
+              </TableCell>
+              <TableCell>{currentSkills?.[i]?.difficulty || 0}</TableCell>
               <TableCell>e</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <CombinedDD skillElements={skills} cop={cop} gender={gender} />
+      <CombinedDD skillElements={[]} id={id} />
     </div>
   );
 }

@@ -1,23 +1,16 @@
 import { Label } from "@/components/ui/label";
-import { Gender } from "@/schema/config-schema";
-import { COPYears, SkillElement, codeOfPoints } from "@/utils/cop";
+import useConfigStore from "@/store/use-config-store";
+import { SkillElement } from "@/utils/cop";
 import { HTMLAttributes, useState } from "react";
 
 interface CombinedDDProps extends HTMLAttributes<HTMLDivElement> {
   skillElements: SkillElement[];
-  cop: COPYears;
-  gender: Gender;
+  id: string;
 }
 
-export function CombinedDD({
-  skillElements,
-  cop,
-  gender,
-  ...props
-}: CombinedDDProps) {
+export function CombinedDD({ skillElements, id, ...props }: CombinedDDProps) {
   const [combinedDD, setCombinedDD] = useState<number>(0); // TODO
-
-  const currentYear = codeOfPoints[cop];
+  const { gender, cop } = useConfigStore();
 
   return (
     <div {...props} className="border-t py-4">

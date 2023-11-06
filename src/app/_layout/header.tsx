@@ -1,4 +1,4 @@
-import { NotationDialog } from "@/components/dd/notation-dialog";
+import { NotationDialog } from "@/components/tariff/notation-dialog";
 
 export function Header() {
   return (

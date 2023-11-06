@@ -1,43 +1,53 @@
-import { SkillElement } from "@/utils/cop";
+import { ConditionReturnType, SkillElement } from "@/utils/cop";
 import { create } from "zustand";
 
+type TariffArgs = {
+  skill: SkillElement;
+  skillString: string;
+  difficulty: number;
+  conditions: ConditionReturnType[];
+  index: number;
+  id: string;
+};
+
+type Tariff = {
+  skill: SkillElement | undefined;
+  skillString?: string;
+  conditions: ConditionReturnType[];
+  difficulty: number;
+};
 // Define the state and actions for the store
 interface SkillStore {
-  dd: (SkillElement | undefined)[];
-  setDDValueAtIndex: (index: number, value: SkillElement | undefined) => void;
-  setDDAtIndexToNull: (index: number) => void;
-  skills: string[];
-  setSkillAtIndex: (index: number, value: string) => void;
-  setSkillAtIndexToEmpty: (index: number) => void;
+  skills: Record<string, Tariff[]>;
+  setTariffAtIndex: (args: TariffArgs) => void;
 }
 
 const useSkillStore = create<SkillStore>((set) => ({
-  dd: [],
-  setDDValueAtIndex: (index, value) =>
+  skills: {},
+  setTariffAtIndex: ({
+    skill,
+    skillString,
+    difficulty,
+    conditions,
+    index,
+    id,
+  }) => {
     set((state) => {
-      const dd = [...state.dd];
-      dd[index] = value;
-      return { dd };
-    }),
-  setDDAtIndexToNull: (index) =>
-    set((state) => {
-      const dd = [...state.dd];
-      dd[index] = undefined;
-      return { dd };
-    }),
-  skills: [],
-  setSkillAtIndex: (index, value) =>
-    set((state) => {
-      const skills = [...state.skills];
-      skills[index] = value;
-      return { skills };
-    }),
-  setSkillAtIndexToEmpty: (index) =>
-    set((state) => {
-      const skills = [...state.skills];
-      skills[index] = "";
-      return { skills };
-    }),
+      const newSkills = { ...state.skills };
+      if (!newSkills[id]) {
+        newSkills[id] = [];
+      }
+      newSkills[id][index] = {
+        skill,
+        skillString,
+        difficulty,
+        conditions,
+      };
+      return {
+        skills: newSkills,
+      };
+    });
+  },
 }));
 
 export default useSkillStore;
