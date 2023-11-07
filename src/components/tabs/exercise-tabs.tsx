@@ -47,8 +47,8 @@ export function ExerciseTabs() {
   }
 
   return (
-    <Tabs defaultValue={tabs[0].id} className="w-full max-w-[100vw]">
-      <TabsList className="max-w-[100vw] overflow-x-scroll">
+    <Tabs defaultValue={tabs[0].id} className="">
+      <TabsList className="max-w-full overflow-x-scroll py-0 flex justify-start w-fit">
         {tabs.map((tab) => (
           <TabsTrigger
             value={tab.id}
@@ -58,7 +58,7 @@ export function ExerciseTabs() {
             <span>Exercise {tab.index}</span>
             <div
               className={cn(
-                "opacity-0 group-hover:opacity-100 transition-opacity duration-300 group absolute z-100 bg-red-500 w-6 h-6 shadow-md rounded-full top-0 right-0 border border-red-600 dark:border-red-800 text-white"
+                "hidden sm:block opacity-0 group-hover:opacity-100 -translate-y-1/5 transition-opacity duration-300 group absolute z-100 bg-red-500 w-6 h-6 shadow-md rounded-full top-0 right-0 border border-red-600 dark:border-red-800 text-white"
               )}
               onClick={() => removeTab(tab.id)}
             >
@@ -71,13 +71,17 @@ export function ExerciseTabs() {
           +
         </Button>
       </TabsList>
+
       {tabs.map((tab) => (
         <TabsContent value={tab.id} key={tab.id} className="space-y-4">
-          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 space-x-0 sm:space-x-2">
-            <SelectGender id={tab.id} />
-            <SelectCOP id={tab.id} />
-          </div>
-          <div className="space-x-4 flex justify-between sm:block">
+          <div className="flex space-x-0 space-y-2 sm:space-y-0 flex-wrap sm:space-x-2">
+            <Button
+              className="w-full sm:w-auto"
+              variant={"secondary"}
+              onClick={() => createDuplicateTab(tab.id)}
+            >
+              Duplicate exercise
+            </Button>
             <Button
               className="w-full sm:w-auto"
               variant={"secondary"}
@@ -86,13 +90,18 @@ export function ExerciseTabs() {
               Reset exercise
             </Button>
             <Button
-              className="w-full sm:w-auto"
               variant={"secondary"}
-              onClick={() => createDuplicateTab(tab.id)}
+              className="w-full block sm:hidden"
+              onClick={() => removeTab(tab.id)}
             >
-              Duplicate exercise
+              Delete tab
             </Button>
           </div>
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 space-x-0 sm:space-x-2">
+            <SelectGender id={tab.id} />
+            <SelectCOP id={tab.id} />
+          </div>
+
           <TariffTable id={tab.id} />
         </TabsContent>
       ))}

@@ -22,7 +22,6 @@ export function TariffInput({ id, index }: TariffInputProps) {
     setTariffAtIndexToEmpty,
     setSkillString,
     getSkillStr,
-    skills,
   } = useSkillStore();
 
   const { cop, gender } = useConfigStore();
@@ -35,12 +34,6 @@ export function TariffInput({ id, index }: TariffInputProps) {
   useEffect(() => {
     try {
       if (getSkillStr(id, index) === "") return;
-
-      // setSkillString({
-      //   id,
-      //   index,
-      //   skillString: tariffInput,
-      // });
 
       const parsedTariff = tariffSchema.parse({
         skill: getSkillStr(id, index),
@@ -55,7 +48,7 @@ export function TariffInput({ id, index }: TariffInputProps) {
       } else {
         toast.error("Something went wrong");
       }
-      // setTariffAtIndexToEmpty({ id, index });
+      setTariffAtIndexToEmpty({ id, index });
     }
   }, [getSkillStr(id, index), currentCop, currentGender]);
 
