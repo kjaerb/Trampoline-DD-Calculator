@@ -8,8 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CombinedDD } from "./temp/combined-dd";
-import { TariffInput } from "./temp/tariff-input";
+import { CombinedDD } from "./combined-dd";
+import { TariffInput } from "./tariff-input";
 import useSkillStore from "@/store/use-skill-store";
 import { Explanation } from "./explanation";
 
@@ -44,7 +44,7 @@ export function TariffTable({ id }: DDTableProps) {
                 </TableCell>
                 <TableCell>{currentSkill?.difficulty ?? 0}</TableCell>
                 <TableCell>
-                  {currentSkill?.conditions.length > 0 && (
+                  {currentSkill?.conditions?.length > 0 && (
                     <Explanation conditions={currentSkill?.conditions ?? []} />
                   )}
                 </TableCell>

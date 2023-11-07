@@ -5,7 +5,7 @@ import { ExerciseTabs } from "@/components/tabs/exercise-tabs";
 
 export default function Home() {
   return (
-    <main className="min-h-screen p-4 w-full md:w-2/3 mx-auto">
+    <main className="min-h-screen p-4 w-full md:w-2/3 mx-auto space-y-4">
       <Header />
       <div className="mx-auto flex flex-col items-center justify-center space-y-2 text-center">
         <IntroText />

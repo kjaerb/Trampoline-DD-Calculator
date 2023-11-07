@@ -17,14 +17,16 @@ interface TariffInputProps {
 }
 
 export function TariffInput({ id, index }: TariffInputProps) {
-  const { setTariffAtIndex, setTariffAtIndexToEmpty, skills } = useSkillStore();
-
-  const currentSkills = skills[id];
+  const {
+    setTariffAtIndex,
+    setTariffAtIndexToEmpty,
+    setSkillString,
+    getSkillStr,
+    skills,
+  } = useSkillStore();
 
   const { cop, gender } = useConfigStore();
-  const [tariffInput, setTariffInput] = useState<string>(
-    currentSkills?.[index]?.skillString ?? ""
-  );
+
   const [error, setError] = useState<string>("");
 
   const currentCop = cop[id];
@@ -32,9 +34,16 @@ export function TariffInput({ id, index }: TariffInputProps) {
 
   useEffect(() => {
     try {
-      if (tariffInput === "") return;
+      if (getSkillStr(id, index) === "") return;
+
+      // setSkillString({
+      //   id,
+      //   index,
+      //   skillString: tariffInput,
+      // });
+
       const parsedTariff = tariffSchema.parse({
-        skill: tariffInput,
+        skill: getSkillStr(id, index),
         gender: currentGender,
         cop: currentCop,
       });
@@ -46,13 +55,12 @@ export function TariffInput({ id, index }: TariffInputProps) {
       } else {
         toast.error("Something went wrong");
       }
-      setTariffAtIndexToEmpty({ id, index });
+      // setTariffAtIndexToEmpty({ id, index });
     }
-  }, [tariffInput, currentCop, currentGender]);
+  }, [getSkillStr(id, index), currentCop, currentGender]);
 
   function calculateTariff(data: Tariff) {
     const parsedElement = transformTariffString(data.skill);
-    const elementJSONString = JSON.stringify(parsedElement);
 
     const tariff = getDifficulty({
       gender: data.gender,
@@ -74,8 +82,10 @@ export function TariffInput({ id, index }: TariffInputProps) {
     <div>
       <Input
         placeholder="Enter skill"
-        value={tariffInput}
-        onChange={(e) => setTariffInput(e.target.value)}
+        value={getSkillStr(id, index)}
+        onChange={(e) =>
+          setSkillString({ id, index, skillString: e.target.value })
+        }
         className={cn(error && "border-red-500 focus-visible:outline-red-500")}
       />
       <Label className="text-red-500">{error}</Label>

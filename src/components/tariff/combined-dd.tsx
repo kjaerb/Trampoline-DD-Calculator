@@ -1,64 +1,47 @@
-// "use client";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import useConfigStore from "@/store/use-config-store";
+import useSkillStore from "@/store/use-skill-store";
+import { SkillElement, codeOfPoints } from "@/utils/cop";
+import { getFullExerciseBonus } from "@/utils/difficulity";
+import { HTMLAttributes } from "react";
 
-// import { HTMLAttributes, useEffect, useState } from "react";
-// import { ConditionReturnType, SkillElement, codeOfPoints } from "@/utils/cop";
-// import useConfigStore from "@/store/use-config-store";
-// import { getDifficulity, getFullExerciseBonus } from "@/utils/difficulity";
-// import { Label } from "@/components/ui/label";
-// import { Separator } from "@/components/ui/separator";
+interface CombinedDDProps extends HTMLAttributes<HTMLDivElement> {
+  id: string;
+}
 
-// interface CombinedDDProps extends HTMLAttributes<HTMLDivElement> {}
+export function CombinedDD({ id, ...props }: CombinedDDProps) {
+  const { gender, cop } = useConfigStore();
+  const { skills } = useSkillStore();
 
-// export function CombinedDD({ ...props }: CombinedDDProps) {
-//   const { dd } = useSkillStore();
-//   const { cop, gender } = useConfigStore();
-//   const [combinedDD, setCombinedDD] = useState<number>(0);
-//   const [exerciseBonus, setExerciseBonus] = useState<ConditionReturnType[]>([]);
+  const currentSkills = skills[id];
+  const currentCOP = cop[id];
+  const currentGender = gender[id];
 
-//   useEffect(() => {
-//     const currentCOP = codeOfPoints[cop];
+  const exerciseBonus = getFullExerciseBonus({
+    condition: codeOfPoints[currentCOP]?.exerciseBonus ?? [],
+    gender: currentGender,
+    elements: currentSkills
+      ?.filter(Boolean)
+      .map((skill) => skill?.skill as SkillElement),
+  });
 
-//     const fullExerciseBonus = getFullExerciseBonus({
-//       condition: currentCOP.exerciseBonus,
-//       gender,
-//       elements: dd.filter(Boolean) as SkillElement[],
-//     });
+  const combinedDD =
+    currentSkills?.reduce((acc, curr) => acc + curr?.difficulty ?? 0, 0) +
+    exerciseBonus?.reduce((acc, curr) => acc + curr.difficulity, 0);
 
-//     setExerciseBonus(fullExerciseBonus);
-
-//     const exerciseDDBonus = fullExerciseBonus.reduce(
-//       (acc, curr) => acc + curr.difficulity,
-//       0
-//     );
-
-//     const currentDD = dd
-//       .filter(Boolean)
-//       .map((d) => {
-//         return getDifficulity({
-//           conditions: currentCOP.conditions,
-//           bonus: currentCOP.bonuses,
-//           element: d as SkillElement,
-//           gender,
-//         });
-//       })
-//       .filter((d) => d.difficulity !== 0)
-//       .reduce((acc, curr) => acc + curr.difficulity, 0);
-
-//     setCombinedDD(currentDD + exerciseDDBonus);
-//   }, [dd, cop, gender]);
-
-//   return (
-//     <div {...props} className="border-t py-4">
-//       <div className="space-y-2">
-//         {exerciseBonus.map((bonus, i) => (
-//           <div className="flex justify-evenly space-x-2" key={i}>
-//             <Label className="">{bonus.label}</Label>
-//             <Separator orientation="vertical" className="h-auto" />
-//             <Label className="no-wrap pl-6">Bonus: {bonus.difficulity}</Label>
-//           </div>
-//         ))}
-//       </div>
-//       <Label className="font-bold">DD: {combinedDD.toFixed(1)}</Label>
-//     </div>
-//   );
-// }
+  return (
+    <div {...props} className="border-t py-4">
+      <div className="space-y-2">
+        {exerciseBonus.map((bonus, i) => (
+          <div className="flex justify-evenly space-x-2" key={i}>
+            <Label className="">{bonus.label}</Label>
+            <Separator orientation="vertical" className="h-auto" />
+            <Label className="no-wrap pl-6">Bonus: {bonus.difficulity}</Label>
+          </div>
+        ))}
+      </div>
+      <Label className="font-bold">DD: {combinedDD?.toFixed(1) || 0}</Label>
+    </div>
+  );
+}
