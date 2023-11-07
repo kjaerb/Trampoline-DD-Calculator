@@ -9,9 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CombinedDD } from "./temp/combined-dd";
-import { nanoid } from "nanoid";
 import { TariffInput } from "./temp/tariff-input";
 import useSkillStore from "@/store/use-skill-store";
+import { Explanation } from "./explanation";
 
 interface DDTableProps {
   id: string;
@@ -33,19 +33,27 @@ export function TariffTable({ id }: DDTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 10 }, (_, i) => (
-            <TableRow key={nanoid()}>
-              <TableCell className="pr-0">{i + 1}</TableCell>
-              <TableCell>
-                <TariffInput id={id} index={i} />
-              </TableCell>
-              <TableCell>{currentSkills?.[i]?.difficulty || 0}</TableCell>
-              <TableCell>e</TableCell>
-            </TableRow>
-          ))}
+          {Array.from({ length: 10 }, (_, i) => {
+            const currentSkill = currentSkills?.[i];
+
+            return (
+              <TableRow key={i}>
+                <TableCell className="pr-0">{i + 1}</TableCell>
+                <TableCell>
+                  <TariffInput id={id} index={i} />
+                </TableCell>
+                <TableCell>{currentSkill?.difficulty ?? 0}</TableCell>
+                <TableCell>
+                  {currentSkill?.conditions.length > 0 && (
+                    <Explanation conditions={currentSkill?.conditions ?? []} />
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
-      <CombinedDD skillElements={[]} id={id} />
+      <CombinedDD id={id} />
     </div>
   );
 }

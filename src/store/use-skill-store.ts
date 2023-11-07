@@ -20,6 +20,7 @@ type Tariff = {
 interface SkillStore {
   skills: Record<string, Tariff[]>;
   setTariffAtIndex: (args: TariffArgs) => void;
+  setTariffAtIndexToEmpty(args: { index: number; id: string }): void;
 }
 
 const useSkillStore = create<SkillStore>((set) => ({
@@ -42,6 +43,23 @@ const useSkillStore = create<SkillStore>((set) => ({
         skillString,
         difficulty,
         conditions,
+      };
+      return {
+        skills: newSkills,
+      };
+    });
+  },
+  setTariffAtIndexToEmpty: ({ index, id }) => {
+    set((state) => {
+      const newSkills = { ...state.skills };
+      if (!newSkills[id]) {
+        newSkills[id] = [];
+      }
+      newSkills[id][index] = {
+        skill: undefined,
+        skillString: undefined,
+        difficulty: 0,
+        conditions: [],
       };
       return {
         skills: newSkills,

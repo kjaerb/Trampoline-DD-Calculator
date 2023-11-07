@@ -1,21 +1,15 @@
 "use client";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Tariff, tariffSchema } from "@/schema/tariff-schema";
 import useConfigStore from "@/store/use-config-store";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getDifficulty, transformTariffString } from "@/utils/difficulity";
 import useSkillStore from "@/store/use-skill-store";
+import { ZodError } from "zod";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface TariffInputProps {
   index: number;
@@ -23,44 +17,38 @@ interface TariffInputProps {
 }
 
 export function TariffInput({ id, index }: TariffInputProps) {
+  const { setTariffAtIndex, setTariffAtIndexToEmpty, skills } = useSkillStore();
+
+  const currentSkills = skills[id];
+
   const { cop, gender } = useConfigStore();
-  const { setTariffAtIndex, skills } = useSkillStore();
+  const [tariffInput, setTariffInput] = useState<string>(
+    currentSkills?.[index]?.skillString ?? ""
+  );
+  const [error, setError] = useState<string>("");
+
   const currentCop = cop[id];
   const currentGender = gender[id];
-  const currentSkill = skills[id];
-
-  const tariffForm = useForm<Tariff>({
-    resolver: zodResolver(tariffSchema),
-    defaultValues: {
-      skill: currentSkill?.[index]?.skillString || "",
-      cop: currentCop,
-      gender: currentGender,
-    },
-  });
-
-  const { control, handleSubmit, watch, setValue } = tariffForm;
 
   useEffect(() => {
-    setValue("gender", currentGender);
-    setValue("cop", currentCop);
-  }, [setValue, currentCop, currentGender]);
-
-  useEffect(() => {
-    toast.dismiss();
-    if (watch("skill") === "") return;
-
-    if (watch("gender") === undefined) {
-      toast.info("Please select a gender");
-      return;
+    try {
+      if (tariffInput === "") return;
+      const parsedTariff = tariffSchema.parse({
+        skill: tariffInput,
+        gender: currentGender,
+        cop: currentCop,
+      });
+      setError("");
+      calculateTariff(parsedTariff);
+    } catch (e) {
+      if (e instanceof ZodError) {
+        setError(e.issues[0].message);
+      } else {
+        toast.error("Something went wrong");
+      }
+      setTariffAtIndexToEmpty({ id, index });
     }
-    if (watch("cop") === undefined) {
-      toast.info("Please select a COP");
-      return;
-    }
-
-    const subscription = watch(() => handleSubmit(calculateTariff)());
-    return () => subscription.unsubscribe();
-  }, [handleSubmit, watch(), cop[id], gender[id]]);
+  }, [tariffInput, currentCop, currentGender]);
 
   function calculateTariff(data: Tariff) {
     const parsedElement = transformTariffString(data.skill);
@@ -83,21 +71,14 @@ export function TariffInput({ id, index }: TariffInputProps) {
   }
 
   return (
-    <Form {...tariffForm}>
-      <form onSubmit={handleSubmit(calculateTariff)}>
-        <FormField
-          control={control}
-          name="skill"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Enter skill" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+    <div>
+      <Input
+        placeholder="Enter skill"
+        value={tariffInput}
+        onChange={(e) => setTariffInput(e.target.value)}
+        className={cn(error && "border-red-500 focus-visible:outline-red-500")}
+      />
+      <Label className="text-red-500">{error}</Label>
+    </div>
   );
 }

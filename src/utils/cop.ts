@@ -40,26 +40,12 @@ type COP = {
 export const codeOfPoints: Record<COPYear, COP> = {
   "2022-2024": {
     conditions: [
-      (args) => {
-        const {
-          element: { quarterRotations },
-        } = args;
-
-        let dd = 0;
-
-        const numRotations = getFullRotations(quarterRotations);
-
-        if (numRotations < 1) {
-          dd = quarterRotations;
-        } else if (numRotations > 4) {
-          dd = quarterRotations;
-        }
-
+      ({ element }) => {
         return {
           id: "18.1.1.1",
           labelPoints: 0.1,
           label: "per ¼ somersault (90°)",
-          difficulity: dd * 0.1,
+          difficulity: (element.quarterRotations % 4) * 0.1,
         };
       },
       (args) => {
@@ -184,21 +170,11 @@ export const codeOfPoints: Record<COPYear, COP> = {
   "2025-2028": {
     conditions: [
       ({ element: { quarterRotations } }) => {
-        let dd = 0;
-
-        const numRotations = getFullRotations(quarterRotations);
-
-        if (numRotations < 1) {
-          dd = quarterRotations;
-        } else if (numRotations > 4) {
-          dd = quarterRotations;
-        }
-
         return {
           id: "17.1.1.1",
           labelPoints: 0.1,
           label: "Each 1/4 somersault (90°)",
-          difficulity: dd * 0.1,
+          difficulity: (quarterRotations % 4) * 0.1,
         };
       },
       ({ element: { quarterRotations } }) => {
@@ -466,9 +442,9 @@ export const codeOfPoints: Record<COPYear, COP> = {
       ({ gender, elements }) => {
         const labelPrefix =
           "Triple or quadruple somersaults in the exercise will receive a bonus: ";
-        const rotations = elements.flatMap(
-          (element) => element.quarterRotations
-        );
+        const rotations = elements
+          ?.filter(Boolean)
+          ?.flatMap((element) => element.quarterRotations);
 
         const trippleOrMoreRotations = rotations.filter(
           (rotation) => getFullRotations(rotation) >= 3
