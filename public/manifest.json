@@ -3,7 +3,7 @@
     "background_color": "#605e5d",
     "display": "standalone",
     "scope": "/",
-    "start_url": "https://trampoline-dd.vercel.app/",
+    "start_url": "/",
     "name": "Trampoline Tariff",
     "short_name": "Trampoline Tariff",
     "description": "An application that can calculate the trampoline tariff for an entire exercise, taking code of points and gender into account",

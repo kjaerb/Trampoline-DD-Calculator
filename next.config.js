@@ -2,7 +2,8 @@
 const nextConfig = {
     images: {
         domains: 
-            ["cdn.buymeacoffee.com", "localhost"]
+            ["cdn.buymeacoffee.com", "localhost"],
+          
 
     }
     
