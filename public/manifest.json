@@ -1,0 +1,32 @@
+{
+    "theme_color": "#1ec3dd",
+    "background_color": "#605e5d",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "https://trampoline-dd.vercel.app/",
+    "name": "Trampoline Tariff",
+    "short_name": "Trampoline Tariff",
+    "description": "An application that can calculate the trampoline tariff for an entire exercise, taking code of points and gender into account",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
