@@ -137,12 +137,12 @@ interface FullDifficulityArgs {
 }
 
 export function getFullExerciseBonus({
-  elements,
+  elements = [],
   condition,
   gender,
 }: FullDifficulityArgs) {
   return condition
-    .filter(Boolean)
-    .map((bonus) => bonus({ elements, gender }))
-    .filter((bonus) => bonus.difficulity !== 0);
+    ?.filter(Boolean)
+    ?.map((bonus) => bonus({ elements, gender }))
+    ?.filter((bonus) => bonus.difficulity !== 0);
 }
