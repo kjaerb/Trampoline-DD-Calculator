@@ -2,14 +2,15 @@
 
 import { Input } from "@/components/ui/input";
 import { Tariff, tariffSchema } from "@/schema/tariff-schema";
-import useConfigStore from "@/store/use-config-store";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { getDifficulty, transformTariffString } from "@/utils/difficulity";
-import useSkillStore from "@/store/use-skill-store";
 import { ZodError } from "zod";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import useExerciseStore from "@/store/use-exercise-store";
+import { Skill } from "@/types/types";
+import { parse } from "path";
 
 interface TariffInputProps {
   index: number;
@@ -18,25 +19,26 @@ interface TariffInputProps {
 
 export function TariffInput({ id, index }: TariffInputProps) {
   const {
-    setTariffAtIndex,
-    setTariffAtIndexToEmpty,
+    getExerciseTab,
+    getSkillString,
     setSkillString,
-    getSkillStr,
-  } = useSkillStore();
-
-  const { cop, gender } = useConfigStore();
-
+    setSkill,
+    resetSkill,
+  } = useExerciseStore();
   const [error, setError] = useState<string>("");
 
-  const currentCop = cop[id];
-  const currentGender = gender[id];
+  const skillString = getSkillString(id, index);
+
+  const exerciseTab = getExerciseTab(id);
+  const currentCop = exerciseTab?.cop;
+  const currentGender = exerciseTab?.gender;
 
   useEffect(() => {
     try {
-      if (getSkillStr(id, index) === "") return;
+      if (skillString === "") return;
 
       const parsedTariff = tariffSchema.parse({
-        skill: getSkillStr(id, index),
+        skill: skillString,
         gender: currentGender,
         cop: currentCop,
       });
@@ -48,9 +50,9 @@ export function TariffInput({ id, index }: TariffInputProps) {
       } else {
         toast.error("Something went wrong");
       }
-      setTariffAtIndexToEmpty({ id, index });
+      resetSkill(id, index);
     }
-  }, [getSkillStr(id, index), currentCop, currentGender]);
+  }, [skillString, currentCop, currentGender]);
 
   function calculateTariff(data: Tariff) {
     const parsedElement = transformTariffString(data.skill);
@@ -61,24 +63,21 @@ export function TariffInput({ id, index }: TariffInputProps) {
       skill: parsedElement,
     });
 
-    setTariffAtIndex({
+    const skill: Skill = {
+      ...parsedElement,
       conditions: tariff.conditions,
-      difficulty: tariff.difficulty,
-      index,
-      id,
-      skill: parsedElement,
-      skillString: data.skill,
-    });
+      tariff: tariff.difficulty,
+    };
+
+    setSkill(id, index, skill);
   }
 
   return (
     <div>
       <Input
         placeholder="Enter skill"
-        value={getSkillStr(id, index)}
-        onChange={(e) =>
-          setSkillString({ id, index, skillString: e.target.value })
-        }
+        value={skillString}
+        onChange={(e) => setSkillString(id, index, e.target.value)}
         className={cn(error && "border-red-500 focus-visible:outline-red-500")}
       />
       <Label className="text-red-500">{error}</Label>

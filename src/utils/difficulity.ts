@@ -1,14 +1,21 @@
-import { COPYear, Tariff, positionSchema } from "@/schema/tariff-schema";
+import {
+  COPYear,
+  Position,
+  Tariff,
+  positionSchema,
+} from "@/schema/tariff-schema";
 import { Gender } from "@/schema/config-schema";
 import {
   Condition,
   ConditionReturnType,
   ExerciseBonus,
-  SkillElement,
   codeOfPoints,
 } from "@/utils/cop";
+import { Skill, SkillTransformed } from "@/types/types";
 
-export function transformTariffString(ddString: Tariff["skill"]): SkillElement {
+export function transformTariffString(
+  ddString: Tariff["skill"]
+): SkillTransformed {
   const seperatedDD = ddString.toUpperCase().split(" ");
 
   const identifiers = seperatedDD.slice(0, seperatedDD.length - 1);
@@ -22,11 +29,12 @@ export function transformTariffString(ddString: Tariff["skill"]): SkillElement {
   });
 
   const position = positionSchema.parse(seperatedDD[seperatedDD.length - 1]);
+  const parsedPosition = getPosition(position);
 
   return {
     quarterRotations,
     twists,
-    position,
+    position: parsedPosition,
   };
 }
 
@@ -57,6 +65,23 @@ export function findDuplicateSkill(
   }
 }
 
+export function getPosition(position: Position): "/" | "<" | "O" {
+  switch (position) {
+    case "/":
+      return "/";
+    case "I":
+      return "/";
+    case "<":
+      return "<";
+    case "V":
+      return "<";
+    case "O":
+      return "O";
+    default:
+      return "O";
+  }
+}
+
 export function getIsBackwards(twists: number): boolean {
   return twists % 2 === 0;
 }
@@ -74,7 +99,7 @@ export function getNumTwists(twists: Record<number, number>): number {
 interface ConditionBonusArgs {
   conditions: Condition[];
   gender: Gender;
-  skill: SkillElement;
+  skill: SkillTransformed;
 }
 
 export function getConditionBonuses({
@@ -95,7 +120,7 @@ type DifficulityReturnType = {
 type DifficulityArgs = {
   copYear: COPYear;
   gender: Gender;
-  skill: SkillElement;
+  skill: SkillTransformed;
 };
 
 export function getDifficulty({
@@ -131,7 +156,7 @@ export function getDifficulty({
 }
 
 interface FullDifficulityArgs {
-  elements: SkillElement[];
+  elements: Skill[];
   condition: ExerciseBonus[];
   gender: Gender;
 }

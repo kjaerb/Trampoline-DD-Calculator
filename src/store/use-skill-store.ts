@@ -1,8 +1,9 @@
-import { ConditionReturnType, SkillElement } from "@/utils/cop";
+import { Skill } from "@/types/types";
+import { ConditionReturnType } from "@/utils/cop";
 import { create } from "zustand";
 
 type TariffArgs = {
-  skill: SkillElement;
+  skill: Skill;
   skillString: string;
   difficulty: number;
   conditions: ConditionReturnType[];
@@ -11,7 +12,7 @@ type TariffArgs = {
 };
 
 type Tariff = {
-  skill: SkillElement | undefined;
+  skill: Skill | undefined;
   skillString?: string;
   conditions: ConditionReturnType[];
   difficulty: number;
@@ -28,7 +29,8 @@ interface SkillStore {
   resetSkills: (id: string) => void;
   duplicateSkills: (id: string, newId: string) => void;
   setTariffAtIndex: (args: TariffArgs) => void;
-  setTariffAtIndexToEmpty(args: { index: number; id: string }): void;
+  setTariffAtIndexToEmpty: (args: { index: number; id: string }) => void;
+  setSkillStore: (store: Record<string, Tariff[]>) => void;
 }
 
 const useSkillStore = create<SkillStore>((set, get) => ({
@@ -111,6 +113,11 @@ const useSkillStore = create<SkillStore>((set, get) => ({
       return {
         skills: newSkills,
       };
+    });
+  },
+  setSkillStore: (store) => {
+    set({
+      skills: store,
     });
   },
 }));

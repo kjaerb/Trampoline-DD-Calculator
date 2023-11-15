@@ -10,16 +10,19 @@ import {
 } from "@/components/ui/table";
 import { CombinedDD } from "./combined-dd";
 import { TariffInput } from "./tariff-input";
-import useSkillStore from "@/store/use-skill-store";
 import { Explanation } from "./explanation";
+import { apperatusExerciseLength } from "@/utils/cop";
+import useExerciseStore from "@/store/use-exercise-store";
 
 interface DDTableProps {
   id: string;
 }
 
 export function TariffTable({ id }: DDTableProps) {
-  const { skills } = useSkillStore();
-  const currentSkills = skills[id];
+  const { getExerciseTab } = useExerciseStore();
+  const currentExerciseTab = getExerciseTab(id);
+  const skillLength =
+    apperatusExerciseLength[currentExerciseTab?.apperatus || "trampoline"];
 
   return (
     <div className="mt-4">
@@ -33,8 +36,8 @@ export function TariffTable({ id }: DDTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 10 }, (_, i) => {
-            const currentSkill = currentSkills?.[i];
+          {Array.from({ length: skillLength }, (_, i) => {
+            const currentExercise = currentExerciseTab?.skills[i];
 
             return (
               <TableRow key={i}>
@@ -42,11 +45,14 @@ export function TariffTable({ id }: DDTableProps) {
                 <TableCell>
                   <TariffInput id={id} index={i} />
                 </TableCell>
-                <TableCell>{currentSkill?.difficulty ?? 0}</TableCell>
+                <TableCell>{currentExercise?.tariff || 0}</TableCell>
                 <TableCell>
-                  {currentSkill?.conditions?.length > 0 && (
-                    <Explanation conditions={currentSkill?.conditions ?? []} />
-                  )}
+                  {currentExercise?.conditions &&
+                    currentExercise.conditions.length > 0 && (
+                      <Explanation
+                        conditions={currentExercise?.conditions ?? []}
+                      />
+                    )}
                 </TableCell>
               </TableRow>
             );

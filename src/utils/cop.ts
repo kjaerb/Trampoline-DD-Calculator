@@ -1,10 +1,18 @@
 import { Gender } from "@/schema/config-schema";
-import { COPYear, Position } from "@/schema/tariff-schema";
+import { COPYear } from "@/schema/tariff-schema";
+import { Apperatus, Skill, SkillTransformed } from "@/types/types";
 import {
   getFullRotations,
   getIsBackwards,
   getNumTwists,
+  getPosition,
 } from "@/utils/difficulity";
+
+export const apperatusExerciseLength: Record<Apperatus, number> = {
+  dmt: 2,
+  trampoline: 10,
+  tumbling: 8,
+} as const;
 
 export type ConditionReturnType = {
   id: string;
@@ -13,21 +21,15 @@ export type ConditionReturnType = {
   difficulity: number;
 };
 
-export type SkillElement = {
-  quarterRotations: number;
-  twists: Record<number, number>;
-  position: Position;
-};
-
 interface ConditionArgs {
-  element: SkillElement;
+  element: SkillTransformed;
   gender: Gender;
 }
 
 export type Condition = (args: ConditionArgs) => ConditionReturnType;
 
 export type ExerciseBonus = (args: {
-  elements: SkillElement[];
+  elements: SkillTransformed[];
   gender: Gender;
 }) => ConditionReturnType;
 
@@ -126,11 +128,13 @@ export const codeOfPoints: Record<COPYear, COP> = {
 
         const numRotations = getFullRotations(quarterRotations);
         const numTwists = getNumTwists(twists);
+        if (!position) throw new Error("Position is undefined");
+        const parsedPosition = getPosition(position);
 
         if (
           numTwists === 0 &&
           numRotations === 1 &&
-          (position === "I" || position === "V")
+          (parsedPosition === "/" || parsedPosition === "<")
         ) {
           dd = 0.1;
         }
@@ -150,8 +154,10 @@ export const codeOfPoints: Record<COPYear, COP> = {
         let dd = 0;
 
         const numRotations = getFullRotations(quarterRotations);
+        if (!position) throw new Error("Position is undefined");
+        const parsedPosition = getPosition(position);
 
-        if (position !== "O" && numRotations >= 2) {
+        if (parsedPosition !== "O" && numRotations >= 2) {
           dd = numRotations * 0.1;
         }
 
@@ -264,11 +270,13 @@ export const codeOfPoints: Record<COPYear, COP> = {
 
         const numRotations = getFullRotations(quarterRotations);
         const numTwists = getNumTwists(twists);
+        if (!position) throw new Error("Position is undefined");
+        const parsedPosition = getPosition(position);
 
         if (
           numTwists === 0 &&
           numRotations === 1 &&
-          (position === "I" || position === "V")
+          (parsedPosition === "/" || parsedPosition === "<")
         ) {
           dd = 0.1;
         }
@@ -283,6 +291,8 @@ export const codeOfPoints: Record<COPYear, COP> = {
       },
       ({ element: { quarterRotations, position } }) => {
         const numRotations = getFullRotations(quarterRotations);
+        if (!position) throw new Error("Position is undefined");
+        const parsedPosition = getPosition(position);
         // will probably give errors
 
         return {
@@ -291,7 +301,9 @@ export const codeOfPoints: Record<COPYear, COP> = {
           label:
             "Multiple somersaults of 720° or more, with or without twists, executed in the straight or pike position, will be awarded an additional 0.1 points",
           difficulity:
-            numRotations >= 2 && position !== "O" ? numRotations * 0.1 : 0,
+            numRotations >= 2 && parsedPosition !== "O"
+              ? numRotations * 0.1
+              : 0,
         };
       },
     ],

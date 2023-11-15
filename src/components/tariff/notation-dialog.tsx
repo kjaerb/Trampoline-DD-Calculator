@@ -19,18 +19,15 @@ export function NotationDialog() {
         <p>Valid positions are:</p>
         <ul className="list-disc list-inside">
           <li>O - Tuck</li>
-          <li>V - Pike</li>
-          <li>I - Straight</li>
+          <li>{"<"} or V - Pike</li>
+          <li>/ or I - Straight</li>
         </ul>
-        <p>
-          <span className="font-bold">Example:</span> 12 - - 3 V
-        </p>
-        <p>
-          <span className="font-bold">Example:</span> 8 4 4 I
-        </p>
-        <p>
-          <span className="font-bold">Example:</span> 4 1 O
-        </p>
+        <p className="font-bold">Examples:</p>
+        <p>12 - - 3 V</p>
+        <p>8 4 4 I</p>
+        <p>8 3 1 /</p>
+        <p>4 1 O</p>
+        <p>4 - {"<"}</p>
       </DialogContent>
     </Dialog>
   );

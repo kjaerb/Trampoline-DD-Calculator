@@ -10,24 +10,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Gender, genders } from "@/schema/config-schema";
-import { Label } from "../ui/label";
-import useConfigStore from "@/store/use-config-store";
+import { Label } from "@/components/ui/label";
+import useExerciseStore from "@/store/use-exercise-store";
 
 interface SelectGenderProps {
   id: string;
 }
 
 export function SelectGender({ id }: SelectGenderProps) {
-  const { gender, setGender } = useConfigStore();
+  const { getExerciseTab, setGender } = useExerciseStore();
 
-  const currentGender = gender[id];
+  const exerciseTab = getExerciseTab(id);
+  const currentGender = exerciseTab?.gender;
 
   return (
     <div className="flex flex-col w-full items-start space-y-2">
       <Label>Gender</Label>
       <Select
         value={currentGender}
-        onValueChange={(e: Gender) => setGender({ id, value: e })}
+        defaultValue={currentGender}
+        onValueChange={(e: Gender) => setGender(id, e)}
       >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a gender" />
