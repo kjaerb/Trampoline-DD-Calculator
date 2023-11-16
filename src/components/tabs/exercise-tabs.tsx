@@ -12,12 +12,16 @@ import {
   RemoveExercise,
   ResetExercise,
 } from "@/components/buttons";
+import { useLoadExercises } from "@/hooks/useExercise";
 
 export function ExerciseTabs() {
   const { exerciseTabs, removeExerciseTab } = useExerciseStore();
+  useLoadExercises();
+
+  if (exerciseTabs.length === 0) return null; // Should maybe be a skeleton
 
   return (
-    <Tabs defaultValue={exerciseTabs[0].id}>
+    <Tabs defaultValue={exerciseTabs[0]?.id}>
       <TabsList className="max-w-full overflow-x-scroll py-0 flex justify-start w-fit">
         {exerciseTabs.map((tab) => (
           <TabsTrigger

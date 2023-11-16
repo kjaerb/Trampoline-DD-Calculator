@@ -179,27 +179,4 @@ export function saveExerciseToCache() {
   }
 }
 
-if (typeof window !== "undefined" && window.localStorage) {
-  try {
-    const ttCache = localStorage.getItem("trampoline-exercises-cache");
-
-    if (ttCache) {
-      const parsedCache = exerciseCacheSchema.parse(JSON.parse(ttCache));
-      console.log(parsedCache);
-      if (Object.keys(parsedCache).length === 0) {
-        useExerciseStore.getState().setAllExerciseTabs([createNewExercise()]);
-      } else {
-        useExerciseStore.getState().setAllExerciseTabs(parsedCache);
-      }
-    } else {
-      useExerciseStore.getState().setAllExerciseTabs([createNewExercise()]);
-    }
-  } catch (ex) {
-    useExerciseStore.getState().setAllExerciseTabs([createNewExercise()]);
-    toast.error("Failed to load exercises from cache");
-  }
-} else {
-  useExerciseStore.getState().setAllExerciseTabs([createNewExercise()]);
-}
-
 export default useExerciseStore;
