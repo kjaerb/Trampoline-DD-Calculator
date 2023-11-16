@@ -1,16 +1,16 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Tariff, tariffSchema } from "@/schema/tariff-schema";
+import { tariffSchema } from "@/schema/tariff-schema";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { getDifficulty, transformTariffString } from "@/utils/difficulity";
+import { calculateTariff } from "@/utils/difficulity";
 import { ZodError } from "zod";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import useExerciseStore from "@/store/use-exercise-store";
-import { Skill } from "@/types/types";
-import { parse } from "path";
+import useExerciseStore, {
+  saveExerciseToCache,
+} from "@/store/use-exercise-store";
 
 interface TariffInputProps {
   index: number;
@@ -43,7 +43,9 @@ export function TariffInput({ id, index }: TariffInputProps) {
         cop: currentCop,
       });
       setError("");
-      calculateTariff(parsedTariff);
+      const skill = calculateTariff(parsedTariff);
+      setSkill(id, index, skill);
+      saveExerciseToCache();
     } catch (e) {
       if (e instanceof ZodError) {
         setError(e.issues[0].message);
@@ -53,24 +55,6 @@ export function TariffInput({ id, index }: TariffInputProps) {
       resetSkill(id, index);
     }
   }, [skillString, currentCop, currentGender]);
-
-  function calculateTariff(data: Tariff) {
-    const parsedElement = transformTariffString(data.skill);
-
-    const tariff = getDifficulty({
-      gender: data.gender,
-      copYear: data.cop,
-      skill: parsedElement,
-    });
-
-    const skill: Skill = {
-      ...parsedElement,
-      conditions: tariff.conditions,
-      tariff: tariff.difficulty,
-    };
-
-    setSkill(id, index, skill);
-  }
 
   return (
     <div>

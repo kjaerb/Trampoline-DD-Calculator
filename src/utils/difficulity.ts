@@ -38,6 +38,24 @@ export function transformTariffString(
   };
 }
 
+export function calculateTariff(data: Tariff): Skill {
+  const parsedElement = transformTariffString(data.skill);
+
+  const tariff = getDifficulty({
+    gender: data.gender,
+    copYear: data.cop,
+    skill: parsedElement,
+  });
+
+  const skill: Skill = {
+    ...parsedElement,
+    conditions: tariff.conditions,
+    tariff: tariff.difficulty,
+  };
+
+  return skill;
+}
+
 export function findDuplicateSkill(
   skills: string[],
   skill: string

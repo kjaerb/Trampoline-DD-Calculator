@@ -1,7 +1,9 @@
 import { Gender } from "@/schema/config-schema";
+import { exerciseCacheSchema } from "@/schema/exercise-schema";
 import { COPYear } from "@/schema/tariff-schema";
 import { ExerciseTab, Skill } from "@/types/types";
 import { nanoid } from "nanoid";
+import { toast } from "sonner";
 import { create } from "zustand";
 
 interface ExerciseTabStore {
@@ -107,26 +109,40 @@ const useExerciseStore = create<ExerciseTabStore>((set, get) => ({
   setSkillString: (tabId, index, skillString) => {
     set((state) => {
       const tab = state.exerciseTabs.find((t) => t.id === tabId);
-      if (!tab) return state;
-      const newTabs = [...state.exerciseTabs];
-      if (!newTabs[index]) {
-        newTabs[index] = createNewExercise();
+
+      if (!tab) {
+        return state;
       }
-      newTabs[index].skillStrings = [...newTabs[index].skillStrings];
-      newTabs[index].skillStrings[index] = skillString;
+
+      const newTabs = [...state.exerciseTabs];
+      const updatedTab = { ...tab };
+      updatedTab.skillStrings[index] = skillString;
+      const tabIndex = newTabs.findIndex((t) => t.id === tabId);
+
+      if (tabIndex !== -1) {
+        newTabs[tabIndex] = updatedTab;
+      }
+
       return { exerciseTabs: newTabs };
     });
   },
   setSkill: (tabId, index, skill) => {
     set((state) => {
       const tab = state.exerciseTabs.find((t) => t.id === tabId);
-      if (!tab) return state;
-      const newTabs = [...state.exerciseTabs];
-      if (!newTabs[index]) {
-        newTabs[index] = createNewExercise();
+
+      if (!tab) {
+        return state;
       }
-      newTabs[index].skills = [...newTabs[index].skills];
-      newTabs[index].skills[index] = skill;
+
+      const newTabs = [...state.exerciseTabs];
+      const updatedTab = { ...tab };
+      updatedTab.skills[index] = skill;
+      const tabIndex = newTabs.findIndex((t) => t.id === tabId);
+
+      if (tabIndex !== -1) {
+        newTabs[tabIndex] = updatedTab;
+      }
+
       return { exerciseTabs: newTabs };
     });
   },
@@ -153,17 +169,36 @@ export function createNewExercise(): ExerciseTab {
   };
 }
 
-if (typeof window !== "undefined" && window.localStorage) {
-  const ttCache = localStorage.getItem("trampoline-exercises-cache");
-  if (ttCache) {
-    //   const tariffSchema = z.record(z.string(), z.custom<Tariff[]>());
-    //   const parsedCache = tariffSchema.parse(JSON.parse(ttCache));
-    // setSkillStore(parsedCache as any);
+export function saveExerciseToCache() {
+  const exercises = useExerciseStore.getState().exerciseTabs;
+  if (typeof window !== "undefined" && window.localStorage) {
+    localStorage.setItem(
+      "trampoline-exercises-cache",
+      JSON.stringify(exercises)
+    );
   }
-  console.log(ttCache);
 }
 
-if (Object.keys(useExerciseStore.getState().exerciseTabs).length === 0) {
+if (typeof window !== "undefined" && window.localStorage) {
+  try {
+    const ttCache = localStorage.getItem("trampoline-exercises-cache");
+
+    if (ttCache) {
+      const parsedCache = exerciseCacheSchema.parse(JSON.parse(ttCache));
+      console.log(parsedCache);
+      if (Object.keys(parsedCache).length === 0) {
+        useExerciseStore.getState().setAllExerciseTabs([createNewExercise()]);
+      } else {
+        useExerciseStore.getState().setAllExerciseTabs(parsedCache);
+      }
+    } else {
+      useExerciseStore.getState().setAllExerciseTabs([createNewExercise()]);
+    }
+  } catch (ex) {
+    useExerciseStore.getState().setAllExerciseTabs([createNewExercise()]);
+    toast.error("Failed to load exercises from cache");
+  }
+} else {
   useExerciseStore.getState().setAllExerciseTabs([createNewExercise()]);
 }
 

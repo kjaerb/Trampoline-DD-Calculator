@@ -15,7 +15,6 @@ import {
 
 export function ExerciseTabs() {
   const { exerciseTabs, removeExerciseTab } = useExerciseStore();
-  console.log(exerciseTabs);
 
   return (
     <Tabs defaultValue={exerciseTabs[0].id}>
