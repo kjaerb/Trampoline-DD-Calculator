@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import useExerciseStore from "@/store/use-exercise-store";
 import { Skill } from "@/types/types";
 import { codeOfPoints } from "@/utils/cop";
-import { getFullExerciseBonus } from "@/utils/difficulity";
+import { getFullExerciseBonus } from "@/utils/tariff";
 import { HTMLAttributes } from "react";
 
 interface CombinedDDProps extends HTMLAttributes<HTMLDivElement> {

@@ -11,10 +11,8 @@ export function useLoadExercises() {
     if (typeof window !== "undefined" && window.localStorage) {
       try {
         const ttCache = localStorage.getItem("trampoline-exercises-cache");
-
         if (ttCache) {
           const parsedCache = exerciseCacheSchema.parse(JSON.parse(ttCache));
-          console.log(parsedCache);
           if (Object.keys(parsedCache).length === 0) {
             setAllExerciseTabs([createNewExercise()]);
           } else {

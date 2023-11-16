@@ -1,9 +1,7 @@
 import { Gender } from "@/schema/config-schema";
-import { exerciseCacheSchema } from "@/schema/exercise-schema";
 import { COPYear } from "@/schema/tariff-schema";
 import { ExerciseTab, Skill } from "@/types/types";
 import { nanoid } from "nanoid";
-import { toast } from "sonner";
 import { create } from "zustand";
 
 interface ExerciseTabStore {
@@ -21,6 +19,8 @@ interface ExerciseTabStore {
   setSkillString: (tabId: string, index: number, skill: string) => void;
   setSkill: (tabId: string, index: number, skill: Skill) => void;
   resetSkill: (tabId: string, index: number) => void;
+  lastActiveTab: string;
+  setLastActiveTab: (tabId: string) => void;
 }
 
 const useExerciseStore = create<ExerciseTabStore>((set, get) => ({
@@ -155,9 +155,17 @@ const useExerciseStore = create<ExerciseTabStore>((set, get) => ({
       return { exerciseTabs: newTabs };
     });
   },
+  lastActiveTab: "",
+  setLastActiveTab: (tabId) => {
+    set(() => ({ lastActiveTab: tabId }));
+  },
 }));
 
 export function createNewExercise(): ExerciseTab {
+  // const tabNames = useExerciseStore
+  //   .getState()
+  //   .exerciseTabs.map((tab) => tab.name);
+
   return {
     apperatus: "trampoline",
     cop: "2022-2024",
@@ -165,18 +173,8 @@ export function createNewExercise(): ExerciseTab {
     skillStrings: [],
     gender: "Men",
     id: nanoid(),
-    name: "New exercise",
+    name: "Exercise",
   };
-}
-
-export function saveExerciseToCache() {
-  const exercises = useExerciseStore.getState().exerciseTabs;
-  if (typeof window !== "undefined" && window.localStorage) {
-    localStorage.setItem(
-      "trampoline-exercises-cache",
-      JSON.stringify(exercises)
-    );
-  }
 }
 
 export default useExerciseStore;

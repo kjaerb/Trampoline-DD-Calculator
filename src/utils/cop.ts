@@ -6,7 +6,7 @@ import {
   getIsBackwards,
   getNumTwists,
   getPosition,
-} from "@/utils/difficulity";
+} from "@/utils/tariff";
 
 export const apperatusExerciseLength: Record<Apperatus, number> = {
   dmt: 2,

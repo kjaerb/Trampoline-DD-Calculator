@@ -16,7 +16,7 @@ interface ExerciseTabProps extends TabsContentProps {
 
 export function ExerciseTab({ tab, ...props }: ExerciseTabProps) {
   return (
-    <TabsContent className="space-y-4" {...props}>
+    <TabsContent {...props} className="space-y-4">
       <div className="flex space-x-0 space-y-2 sm:space-y-0 flex-wrap sm:space-x-2">
         <DuplicateExercise id={tab.id} />
         <ResetExercise id={tab.id} />

@@ -11,7 +11,7 @@ import {
   ExerciseBonus,
   codeOfPoints,
 } from "@/utils/cop";
-import { Skill, SkillTransformed } from "@/types/types";
+import { Apperatus, Skill, SkillTransformed } from "@/types/types";
 
 export function transformTariffString(
   ddString: Tariff["skill"]
@@ -38,22 +38,32 @@ export function transformTariffString(
   };
 }
 
-export function calculateTariff(data: Tariff): Skill {
-  const parsedElement = transformTariffString(data.skill);
+interface CalculateTariffArgs {
+  skill: SkillTransformed;
+  gender: Gender;
+  cop: COPYear;
+  apperaturs?: Apperatus;
+}
+
+export function calculateTariff({
+  skill,
+  gender,
+  cop,
+  apperaturs = "trampoline",
+}: CalculateTariffArgs): Skill {
+  // const parsedElement = transformTariffString(data.skill);
 
   const tariff = getDifficulty({
-    gender: data.gender,
-    copYear: data.cop,
-    skill: parsedElement,
+    gender,
+    copYear: cop,
+    skill,
   });
 
-  const skill: Skill = {
-    ...parsedElement,
+  return {
+    ...skill,
     conditions: tariff.conditions,
     tariff: tariff.difficulty,
   };
-
-  return skill;
 }
 
 export function findDuplicateSkill(
@@ -188,4 +198,15 @@ export function getFullExerciseBonus({
     ?.filter(Boolean)
     ?.map((bonus) => bonus({ elements, gender }))
     ?.filter((bonus) => bonus.difficulity !== 0);
+}
+
+interface CombinedTariffArgs {
+  skills: Array<Skill[]>;
+}
+
+export function getCombinedTariff({ skills }: CombinedTariffArgs): number {
+  return skills.reduce(
+    (acc, skill) => acc + skill.reduce((acc, skill) => acc + skill.tariff, 0),
+    0
+  );
 }
